@@ -1,0 +1,20 @@
+name: Validation Pipeline
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Dependencies
+      shell: pwsh
+      run: |
+        Set-PSRepository PSGallery -InstallationPolicy Trusted
+        Install-Module PSScriptAnalyzer, Pester -Force
+    - name: Run Linter
+      shell: pwsh
+      run: |
+        $Res = Invoke-ScriptAnalyzer -Path . -Recurse -Severity Error
+        if ($Res) { $Res | Format-Table; exit 1 }
+    - name: Run Tests
+      shell: pwsh
+      run: Invoke-Pester -Path "./ProfileSavior.Tests.ps1" -Output Detailed
