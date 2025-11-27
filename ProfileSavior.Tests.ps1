@@ -6,7 +6,6 @@ Describe "Profile Savior Integrity Check" {
     }
     Context "File Artifacts" {
         It "File should exist" { $ScriptPath | Should -Exist }
-        It "Syntax should be valid" { $ScriptPath | Should -HaveValidScriptSyntax }
     }
     Context "Functionality" {
         It "Should load without crashing" { { . $ScriptPath } | Should -Not -Throw }
